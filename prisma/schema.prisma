@@ -1,0 +1,75 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int          @id @default(autoincrement())
+  name      String
+  email     String       @unique
+  password  String
+  image     String?
+  mynotes   Note[]       @relation("note_creator")
+  notes     NoteToUser[]
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+}
+
+model Note {
+  id         Int          @id @default(autoincrement())
+  title      String
+  body       String
+  type_id    Int
+  creator_id Int
+  createor   User         @relation("note_creator", fields: [creator_id], references: [id])
+  type       NoteType     @relation(fields: [type_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  media      Media[]
+  notes      NoteToUser[]
+  deleted    Boolean      @default(false)
+  created_at DateTime     @default(now())
+  updated_at DateTime     @updatedAt
+
+  @@index([created_at])
+}
+
+model Media {
+  id         Int      @id @default(autoincrement())
+  url        String
+  note_id    Int
+  note       Note     @relation(fields: [note_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model NoteType {
+  id         Int      @id @default(autoincrement())
+  name       String
+  disabled   Boolean  @default(false)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  notes      Note[]
+}
+
+model NoteToUser {
+  id      Int            @id @default(autoincrement())
+  user    User           @relation(fields: [user_id], references: [id])
+  user_id Int
+  note    Note           @relation(fields: [note_id], references: [id])
+  note_id Int
+  status  NoteUserStatus @default(unread)
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+  @@index([created_at,user_id])
+}
+
+enum NoteUserStatus {
+  read
+  unread
+}
