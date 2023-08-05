@@ -13,7 +13,7 @@ app.use(cors({origin:'*'}));
 app.use(express.json());
 app.use(morgan("common"))
 
-app.use("/api/v1", appRoutes)
+app.use("/api/v1/", appRoutes)
 
 // 404 routes
 app.use('*', (req: Request, res: Response, next: NextFunction) => {
