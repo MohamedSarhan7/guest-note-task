@@ -15,9 +15,10 @@ model User {
   name      String
   email     String       @unique
   password  String
-  image     String?        @db.VarChar(250)
+  image     String?      @db.VarChar(250)
   mynotes   Note[]       @relation("note_creator")
   notes     NoteToUser[]
+  fcmTokens FCMTokens[]
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
 }
@@ -58,15 +59,26 @@ model NoteType {
 }
 
 model NoteToUser {
-  id      Int            @id @default(autoincrement())
-  user    User           @relation(fields: [user_id], references: [id])
-  user_id Int
-  note    Note           @relation(fields: [note_id], references: [id])
-  note_id Int
-  status  NoteUserStatus @default(unread)
+  id         Int            @id @default(autoincrement())
+  user       User           @relation(fields: [user_id], references: [id])
+  user_id    Int
+  note       Note           @relation(fields: [note_id], references: [id])
+  note_id    Int
+  status     NoteUserStatus @default(unread)
+  avilable   Boolean        @default(true)
+  created_at DateTime       @default(now())
+  updated_at DateTime       @updatedAt
+
+  @@index([created_at, user_id,avilable])
+}
+
+model FCMTokens {
+  id         Int      @id @default(autoincrement())
+  token      String
+  user       User     @relation(fields: [user_id], references: [id])
+  user_id    Int
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  @@index([created_at,user_id])
 }
 
 enum NoteUserStatus {
