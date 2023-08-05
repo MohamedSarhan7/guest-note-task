@@ -15,7 +15,7 @@ model User {
   name      String
   email     String       @unique
   password  String
-  image     String?
+  image     String?        @db.VarChar(250)
   mynotes   Note[]       @relation("note_creator")
   notes     NoteToUser[]
   createdAt DateTime     @default(now())

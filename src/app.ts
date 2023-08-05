@@ -3,6 +3,8 @@ import { Request, Response, NextFunction } from "express";
 import morgan from "morgan";
 import createExeption from "http-errors";
 import cors from 'cors';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 import appRoutes from "./app-routes";
 import errorHandler from "./common/utils/myError";
