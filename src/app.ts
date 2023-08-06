@@ -7,11 +7,10 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 import appRoutes from "./app-routes";
-import errorHandler from "./common/utils/myError";
-
+import { errorHandler, insertNoteTypesIfNotExists } from "./common/utils/index";
 const app = express();
 
-app.use(cors({origin:'*'}));
+app.use(cors({ origin: '*' }));
 app.use(express.json());
 app.use(morgan("common"))
 
@@ -24,4 +23,9 @@ app.use('*', (req: Request, res: Response, next: NextFunction) => {
 // error handler
 app.use(errorHandler);
 
-app.listen(3000)
+app.listen(process.env.PORT || 3000, async () => {
+  console.log(`Server is running on port ${process.env.PORT || 3000}`)
+  
+  // insert note types
+  await insertNoteTypesIfNotExists()
+})
