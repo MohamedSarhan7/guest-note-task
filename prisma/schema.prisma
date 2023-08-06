@@ -29,7 +29,7 @@ model Note {
   id         Int          @id @default(autoincrement())
   title      String
   body       String
-  type_id    Int
+  type_id    Int 
   creator_id Int
   createor   User         @relation("note_creator", fields: [creator_id], references: [id])
   type       NoteType     @relation(fields: [type_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
@@ -57,14 +57,14 @@ model NoteType {
   disabled   Boolean  @default(false)
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
-  notes      Note[]
+  notes      Note[]  
 }
 
 model NoteToUser {
   id         Int            @id @default(autoincrement())
-  user       User           @relation(fields: [user_id], references: [id])
+  user       User           @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   user_id    Int
-  note       Note           @relation(fields: [note_id], references: [id])
+  note       Note           @relation(fields: [note_id], references: [id], onDelete: Cascade, onUpdate: Cascade)
   note_id    Int
   status     NoteUserStatus @default(unread)
   avilable   Boolean        @default(true)

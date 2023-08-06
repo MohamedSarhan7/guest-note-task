@@ -2,6 +2,7 @@ import prismaService from "../prisma/prisma.service";
 import { JwtPayload } from "../../common/types/index";
 import { CreateNoteDto } from "./dto/index";
 import createHttpError from "http-errors";
+import { buildNotificationArray } from "../../common/utils/notifications";
 import app, {  sendNotification, uploadImage } from "../../modules/firebase/firebase.service";
 
 export const createNote = async (note: CreateNoteDto, files: Express.Multer.File[], user: JwtPayload) => {
@@ -49,7 +50,7 @@ export const createNote = async (note: CreateNoteDto, files: Express.Multer.File
   })
 
   //  send notification fb
-  const notifications = buildNotificationArray(users, note.title)
+  const notifications = buildNotificationArray(users, note.title,note.body)
   sendNotification(notifications)
   
 
@@ -72,25 +73,6 @@ const uploadImages = async (files: Express.Multer.File[], note_id: number) => {
 
 }
 
-const buildNotificationArray = (users: any[], title: string) => {
-  const notifcations = []
-  users.forEach(user => {
-    if (user.fcmTokens) {
-      user.fcmTokens.forEach((token) => {
-        const notification = {
-          token: token.token,
-          notification: {
-            title: "you have recived new note",
-            body: title
-          }
-        }
-        notifcations.push(notification);
-      });
-
-    }
-  })
-  return notifcations
-}
 
 const getNoteTypebyId = async(id:number)=>{
   return await prismaService.noteType.findUnique({ where: { id } })

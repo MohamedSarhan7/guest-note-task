@@ -5,9 +5,12 @@ import createExeption from "http-errors";
 import cors from 'cors';
 import * as dotenv from 'dotenv';
 dotenv.config();
+// import cron from 'node-cron'
 
 import appRoutes from "./app-routes";
-import { errorHandler, insertNoteTypesIfNotExists } from "./common/utils/index";
+import { errorHandler, insertNoteTypesIfNotExists,dailyNotification } from "./common/utils/index";
+// import { validate } from 'class-validator';
+// import  './common/utils/cron-job';
 const app = express();
 
 app.use(cors({ origin: '*' }));
@@ -23,9 +26,14 @@ app.use('*', (req: Request, res: Response, next: NextFunction) => {
 // error handler
 app.use(errorHandler);
 
+
+// dailyNotification
 app.listen(process.env.PORT || 3000, async () => {
+
   console.log(`Server is running on port ${process.env.PORT || 3000}`)
-  
+
   // insert note types
-  await insertNoteTypesIfNotExists()
+  await insertNoteTypesIfNotExists();
 })
+
+dailyNotification.start()
