@@ -4,6 +4,9 @@ import app, { uploadImage } from "../../modules/firebase/firebase.service";
 import catchAsyncErrors from "../../common/utils/catch-async-errors";
 import { AuthRequest } from "../../common/types/auth-request.types";
 import prismaService from "../prisma/prisma.service";
+import { UpdateUserDto } from "./dto/index";
+import { validate, ValidationError } from 'class-validator';
+import { updateUserService } from "./user.service";
 export const uploadUserImage = catchAsyncErrors(async (req: AuthRequest, res: Response, next: NextFunction) => {
 
   if (!req.file) throw createException(400, 'you must provide a file')
@@ -22,5 +25,28 @@ export const uploadUserImage = catchAsyncErrors(async (req: AuthRequest, res: Re
     console.log(error)
     next(createException(500, 'Failed to upload file.'))
   }
+
+})
+
+export const updateUser = catchAsyncErrors(async (req: AuthRequest, res: Response, next: NextFunction) => {
+
+  if(!Object.keys(req.body).length) throw createException(400)
+  const user = new UpdateUserDto({name:req.body.name,fcmToken:req.body.fcmToken });
+
+  const err = await validate(user, { validationError: { target: false, } });
+
+  if (err.length > 0) {
+    const errors = err.map((error: ValidationError) => {
+      return {
+        "path": error.property,
+        "errors": Object.values(error.constraints)
+      }
+    }
+    )
+    return next(createException(400, errors))
+  }
+  console.log(user)
+  const response = await updateUserService(user, req.user);
+  return res.json(response)
 
 })

@@ -4,7 +4,6 @@ export class UserDto {
 
   id: number;
   email: string;
-  picture: string;
   image?: string;
   createdAt?: Date;
   updatedAt?: Date;
