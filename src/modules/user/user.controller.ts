@@ -6,7 +6,7 @@ import { AuthRequest } from "../../common/types/auth-request.types";
 import prismaService from "../prisma/prisma.service";
 import { UpdateUserDto } from "./dto/index";
 import { validate, ValidationError } from 'class-validator';
-import { updateUserService } from "./user.service";
+import { updateUserService, timelineService } from "./user.service";
 export const uploadUserImage = catchAsyncErrors(async (req: AuthRequest, res: Response, next: NextFunction) => {
 
   if (!req.file) throw createException(400, 'you must provide a file')
@@ -52,5 +52,19 @@ export const updateUser = catchAsyncErrors(async (req: AuthRequest, res: Respons
   // console.log(user)
   const response = await updateUserService(user, req.user);
   return res.json(response)
+
+})
+
+export const getTimeLine = catchAsyncErrors(async (req: AuthRequest, res: Response, next: NextFunction) => {
+  console.log(req.user)
+  console.log(req.query)
+  // const take = req.body.take
+  // const skip = req.body.skip
+
+  const types = req.query.types? Object.values(req.query.types).map(Number):undefined
+
+  console.log(types)
+  const response = await timelineService(req.user, types, req.body.take, req.body.skip)
+  return res.json(response);
 
 })

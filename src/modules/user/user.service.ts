@@ -21,12 +21,61 @@ export const updateUserService = async (userData: UpdateUserDto, user: JwtPayloa
     data: {
       user_id: user.id,
       token: userData.fcmToken
-    }, include: { user: {include:{fcmTokens:true}} }
+    }, include: { user: { include: { fcmTokens: true } } }
   })));
   // }
   // console.log(updatedUser.fcmTokens)
-  return fcmToken?fcmToken.user:updatedUser
+  return fcmToken ? fcmToken.user : updatedUser
 }
 
 
 
+export const timelineService = async (user: JwtPayload, types: number[] | undefined, take: number, skip: number) => {
+
+  const currentDate = new Date();
+  const thirtyDaysAgo = new Date();
+  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+
+  const queryWithTypes = {
+    where: {
+      deleted: false,
+      notes: {
+        some: {
+          user_id: user.id,
+          avilable: true
+        }
+      },
+      type_id: { in: types },
+      created_at: { gt: thirtyDaysAgo, lte: currentDate },
+    }
+    ,
+    skip: (skip - 1) * take,
+    take,
+    include: { media: { select: { url: true } } }
+
+  }
+  const queryWithoutTypes = {
+    where: {
+      deleted: false,
+      notes: {
+        some: {
+          user_id: user.id,
+          avilable: true
+        }
+      },
+      type_id: { in: types },
+      created_at: { gt: thirtyDaysAgo, lte: currentDate }
+    },
+    skip: (skip - 1) * take,
+    take,
+    include: { media: {select:{url:true}} }
+
+  }
+
+  const [notes, totalCount] = await Promise.all([
+    prismaService.note.findMany(types ? queryWithTypes : queryWithoutTypes),
+    prismaService.note.count({where:queryWithoutTypes.where})
+  ])
+
+  return {notes, totalCount}
+}
