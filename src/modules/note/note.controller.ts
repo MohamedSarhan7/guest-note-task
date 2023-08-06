@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
-import { validate, ValidationError, Length } from 'class-validator';
+import { validate, ValidationError } from 'class-validator';
 import createException from 'http-errors';
 // ----------------------------------------------------------------
 import { createNote } from './note.service';
-import catchAsyncErrors from '../../common/utils/catch-async-errors';
+import {catchAsyncErrors} from '../../common/utils/index';
 import { CreateNoteDto } from './dto/index';
-import { AuthRequest } from '../../common/types/auth-request.types';
+import { AuthRequest } from '../../common/types/index';
 
 export const create = catchAsyncErrors(async (req: AuthRequest, res: Response, next: NextFunction) => {
 

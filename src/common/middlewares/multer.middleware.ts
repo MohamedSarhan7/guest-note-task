@@ -2,7 +2,7 @@ import multer from 'multer'
 
 const sotrage = multer.memoryStorage();
 const validImageType = ['image/png', 'image/jpg', 'image/jpeg']
-const upload = multer({
+export const upload = multer({
   storage: sotrage,
   limits: { fileSize: ((1.7) * (1024) * (1024)) },
   // error:{}
@@ -18,4 +18,4 @@ const upload = multer({
   },
 });
 
-export default upload;
+// export default upload;

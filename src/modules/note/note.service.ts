@@ -1,5 +1,5 @@
 import prismaService from "../prisma/prisma.service";
-import { JwtPayload } from "../../common/types/auth-request.types";
+import { JwtPayload } from "../../common/types/index";
 import { CreateNoteDto } from "./dto/index";
 import createHttpError from "http-errors";
 import app, {  sendNotification, uploadImage } from "../../modules/firebase/firebase.service";

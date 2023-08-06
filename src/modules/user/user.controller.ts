@@ -1,8 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import createException from 'http-errors';
 import app, { uploadImage } from "../../modules/firebase/firebase.service";
-import catchAsyncErrors from "../../common/utils/catch-async-errors";
-import { AuthRequest } from "../../common/types/auth-request.types";
+import { catchAsyncErrors } from "../../common/utils/index";
+import { AuthRequest } from "../../common/types/index";
 import prismaService from "../prisma/prisma.service";
 import { UpdateUserDto, deleteReceivedNotesDto } from "./dto/index";
 import { validate, ValidationError } from 'class-validator';

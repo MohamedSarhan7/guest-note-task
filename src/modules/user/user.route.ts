@@ -1,8 +1,7 @@
 import { Router } from 'express';
-import upload from '../../common/middlewares/multer.middleware';
 import { updateUser, uploadUserImage ,getTimeLine,deleteReceivedNotes} from './user.controller';
-import isAuthentcated from "../../common/middlewares/is-authentcated.middleware"
-import { PaginationParams } from '../../common/middlewares/pagination.middleware';
+import { isAuthentcated, upload, PaginationParams } from "../../common/middlewares/index"
+
 const userRouter = Router();
 
 userRouter.post('/upload-profile', isAuthentcated, upload.single('image'), uploadUserImage);

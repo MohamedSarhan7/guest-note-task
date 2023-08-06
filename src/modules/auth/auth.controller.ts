@@ -3,9 +3,8 @@ import { validate, ValidationError } from "class-validator";
 import createExeption from 'http-errors';
 // ----------------------------------------------------------------
 import { authLogin, authRegister } from './auth.service';
-import { LoginDto } from './dto/index';
-import catchAsyncErrors from '../../common/utils/catch-async-errors';
-import { RegisterDto } from './dto/register.dto';
+import { LoginDto, RegisterDto } from './dto/index';
+import {catchAsyncErrors} from '../../common/utils/index';
 // ----------------------------------------------------------------
 
 export const login = catchAsyncErrors(async (req: Request, res: Response, next: NextFunction): Promise<any> => {

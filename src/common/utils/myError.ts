@@ -1,7 +1,7 @@
 import type { ErrorRequestHandler } from "express";
 import multer from "multer";
 
-const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
+export const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   console.log(err.message)
   const statusCode = err.statusCode || 500;
   const errorMessage = statusCode !== 500 ? err.message : 'Internal Server Error';
@@ -17,5 +17,3 @@ const errorHandler: ErrorRequestHandler = (err, req, res, next) => {
   return res.status(statusCode).json({ message: errorMessage, errors });
 
 }
-
-export default errorHandler;
