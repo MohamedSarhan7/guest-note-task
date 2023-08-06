@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsOptional } from 'class-validator'
+import { IsString, IsNotEmpty, IsOptional, IsBoolean } from 'class-validator'
 export class UpdateUserDto {
   @IsOptional()
   @IsString()
@@ -9,6 +9,10 @@ export class UpdateUserDto {
   @IsString()
   @IsNotEmpty()
   fcmToken: string
+  
+  @IsOptional()
+  @IsBoolean()
+  receive_daily_notifi:boolean
 
   constructor(partial: UpdateUserDto) {
     Object.assign(this, partial);

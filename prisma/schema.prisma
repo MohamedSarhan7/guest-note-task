@@ -21,6 +21,8 @@ model User {
   fcmTokens FCMTokens[]
   createdAt DateTime     @default(now())
   updatedAt DateTime     @updatedAt
+  receive_daily_notifi Boolean @default(false)
+  @@index([receive_daily_notifi])
 }
 
 model Note {

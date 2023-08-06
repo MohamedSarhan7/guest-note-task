@@ -30,8 +30,12 @@ export const uploadUserImage = catchAsyncErrors(async (req: AuthRequest, res: Re
 
 export const updateUser = catchAsyncErrors(async (req: AuthRequest, res: Response, next: NextFunction) => {
 
-  if(!Object.keys(req.body).length) throw createException(400)
-  const user = new UpdateUserDto({name:req.body.name,fcmToken:req.body.fcmToken });
+  if (!Object.keys(req.body).length) throw createException(400)
+  const user = new UpdateUserDto({
+    name: req.body.name,
+    fcmToken: req.body.fcmToken,
+    receive_daily_notifi: req.body.receive_daily_notifi
+  });
 
   const err = await validate(user, { validationError: { target: false, } });
 
@@ -45,7 +49,7 @@ export const updateUser = catchAsyncErrors(async (req: AuthRequest, res: Respons
     )
     return next(createException(400, errors))
   }
-  console.log(user)
+  // console.log(user)
   const response = await updateUserService(user, req.user);
   return res.json(response)
 
