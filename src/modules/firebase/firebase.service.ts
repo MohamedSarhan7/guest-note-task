@@ -4,13 +4,20 @@ import { Bucket } from '@google-cloud/storage';
 dotenv.config();
 const serviceAccount = require("../../../serviceAccountKey.json")
 
+export interface IPushNotification {
+  token: string,
+  notification: {
+    title: string,
+    body: string
+  }
+}
 
 const firebaseAdmin = admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   storageBucket: process.env.FIREBASE_STORAGE_BUCKET
 })
 
-export const uploadImage = async (file: Express.Multer.File, bucket:Bucket, filename: string) => {
+export const uploadImage = async (file: Express.Multer.File, bucket: Bucket, filename: string) => {
   return new Promise((resolve, reject) => {
     const fileUpload = bucket.file(filename);
 
@@ -35,6 +42,15 @@ export const uploadImage = async (file: Express.Multer.File, bucket:Bucket, file
 
 
 
+}
+
+
+export const sendNotification = async (notifcations: IPushNotification[]) => {
+  if (!notifcations.length) return
+
+  admin.messaging().sendAll(notifcations)
+    .then(response => console.log(response.responses))
+    .catch(error => console.log(error));
 }
 export default firebaseAdmin
 
