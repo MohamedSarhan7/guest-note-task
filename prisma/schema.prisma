@@ -69,7 +69,7 @@ model NoteToUser {
   created_at DateTime       @default(now())
   updated_at DateTime       @updatedAt
 
-  @@index([created_at, user_id,avilable])
+  @@index([created_at, user_id, avilable])
 }
 
 model FCMTokens {

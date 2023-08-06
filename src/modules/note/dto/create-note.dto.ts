@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsPositive, IsArray, IsNumber } from 'class-validator'
+import { IsString, IsNotEmpty,MinLength,IsNumber, IsArray } from 'class-validator'
 export class CreateNoteDto {
   @IsString()
   @IsNotEmpty()
@@ -9,10 +9,11 @@ export class CreateNoteDto {
   body: string;
   
   @IsNumber()
-  @IsPositive()
+  // @IsPositive()
   type_id: number;
   
-  @IsNumber({},{ each:true})
+  // @MinLength(1,{ each:true})
+  @IsArray()
   users_id: number[];
 
   constructor(note: CreateNoteDto) {

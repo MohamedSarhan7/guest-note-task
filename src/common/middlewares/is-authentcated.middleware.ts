@@ -14,7 +14,7 @@ const auth = catchAsyncErrors(async (req: AuthRequest, res: Response, next: Next
   try {
     const decoded = jwt.verify(token, process.env.TOKEN_KEY);
     req.user = decoded;
-    console.log(req.user)
+    // console.log(req.user)
   } catch (err) {
     throw createHttpError(403, "Invalid Token")
     // return res.status(401).send("Invalid Token");

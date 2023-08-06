@@ -42,7 +42,7 @@ delete user.password
 const signAccessToken = (user: any) => {
   const token = jwt.sign(
     {
-      user_id: user._id,
+      id: user.id,
       email: user.email,
     },
     process.env.TOKEN_KEY,
