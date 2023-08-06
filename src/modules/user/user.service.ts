@@ -79,3 +79,13 @@ export const timelineService = async (user: JwtPayload, types: number[] | undefi
 
   return {notes, totalCount}
 }
+
+
+export const deleteReceivedNotesService=async(notes_ids:number[],user:JwtPayload)=>{
+  const res= await prismaService.noteToUser.updateMany({
+    where:{note_id:{in:notes_ids},user_id:user.id,avilable:true},
+    data:{avilable:false}
+  })
+  if (!res.count) throw createHttpError(404,"Not Found or already deleted")
+return {message:`${res.count} notes deleted` ,count:res.count}
+}

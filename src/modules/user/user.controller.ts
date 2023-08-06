@@ -4,9 +4,10 @@ import app, { uploadImage } from "../../modules/firebase/firebase.service";
 import catchAsyncErrors from "../../common/utils/catch-async-errors";
 import { AuthRequest } from "../../common/types/auth-request.types";
 import prismaService from "../prisma/prisma.service";
-import { UpdateUserDto } from "./dto/index";
+import { UpdateUserDto, deleteReceivedNotesDto } from "./dto/index";
 import { validate, ValidationError } from 'class-validator';
-import { updateUserService, timelineService } from "./user.service";
+import { updateUserService, timelineService, deleteReceivedNotesService } from './user.service';
+
 export const uploadUserImage = catchAsyncErrors(async (req: AuthRequest, res: Response, next: NextFunction) => {
 
   if (!req.file) throw createException(400, 'you must provide a file')
@@ -61,10 +62,35 @@ export const getTimeLine = catchAsyncErrors(async (req: AuthRequest, res: Respon
   // const take = req.body.take
   // const skip = req.body.skip
 
-  const types = req.query.types? Object.values(req.query.types).map(Number):undefined
+  const types = req.query.types ? Object.values(req.query.types).map(Number) : undefined
 
   console.log(types)
   const response = await timelineService(req.user, types, req.body.take, req.body.skip)
   return res.json(response);
 
+})
+
+
+export const deleteReceivedNotes = catchAsyncErrors(async (req: AuthRequest, res: Response, next: NextFunction) => {
+  const notes = new deleteReceivedNotesDto(
+    {
+      notes_ids: req.body.notes_ids,
+    });
+
+  const err = await validate(notes, { validationError: { target: false, } });
+
+  if (err.length > 0) {
+    const errors = err.map((error: ValidationError) => {
+      return {
+        "path": error.property,
+        "errors": Object.values(error.constraints)
+      }
+    }
+    )
+    return next(createException(400, errors))
+  }
+  if (!notes.notes_ids.length) throw createException(400, "notes_ids array is empty")
+
+  const response = await deleteReceivedNotesService(notes.notes_ids, req.user)
+  return res.json(response);
 })
