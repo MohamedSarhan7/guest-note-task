@@ -10,5 +10,5 @@ export const dailyNotification = cron.schedule('0 10 * * *', async () => {
   main()
 }, {
   scheduled: false,
-  timezone: 'Asia/Kolkata'
+  timezone: 'Africa/Cairo'
 })
